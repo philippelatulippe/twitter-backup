@@ -46,11 +46,9 @@ unless ( $nt->authorized ) {
 }
 
 # Read last id
-open(IDFILE, "<$data_directory/lastid") or die "Write error lastid! $!\n";
-my $high_water = <IDFILE>;
-if(!defined $high_water){
-    $high_water='1';
-    print "was not defined\n";
+my $high_water='1';
+if(open(IDFILE, "<$idfile")){
+    $high_water = <IDFILE>;
 }
 chomp($high_water);
 close(IDFILE);
