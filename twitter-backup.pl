@@ -6,6 +6,8 @@ use diagnostics;
 
 use Net::Twitter;
 
+my $data_directory = "backup";
+
 # Initialize Twitter connections
 my $nt = Net::Twitter->new(
     traits          => ['API::REST', 'OAuth'],
@@ -28,16 +30,16 @@ print "TOKEN = $access_token - SECRET = $access_token_secret \n";
 }
 
 # Read last id
-open(IDFILE, "backup/lastid") or die "Write error lastid! $!\n";
+open(IDFILE, "$data_directory/lastid") or die "Write error lastid! $!\n";
 chomp(my $high_water = <IDFILE>);
 close(IDFILE);
 
 # Open output file
-open(BAKFILE, ">>backup/twitter-current") or die "Write error log file! $!\n";
+open(BAKFILE, ">>$data_directory/twitter-current") or die "Write error log file! $!\n";
 binmode BAKFILE, ":utf8";
 
 # Open lastid file
-open(IDFILE, ">backup/lastid") or die "Write error lastid! $!\n";
+open(IDFILE, ">$data_directory/lastid") or die "Write error lastid! $!\n";
 
 my $firstid = '';
 my $lastid = '';
