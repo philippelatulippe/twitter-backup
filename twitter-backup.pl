@@ -20,20 +20,38 @@ if( not defined($nt) or $@ ) {
 	die "Could not create Twitter connection! " . $@ . "\n";
 }
 
-# Uncomment when you have your OAuth infos!
-#$nt->access_token('TOKEN');
-#$nt->access_token_secret('SECRET');
+#OAuth portion
+if(open(TOKENFILE, "<$data_directory/oauth_token")){
+    while(<TOKENFILE> =~ /^(.+?)=(.+)$/){
+	if($1 eq "TOKEN"){
+	    $nt->access_token($2);
+	}elsif($1 eq "SECRET"){
+	    $nt->access_token_secret($2);
+	}
+    }
+    close(TOKENFILE);
+}
 
 unless ( $nt->authorized ) {
-print "Authorize this app at ", $nt->get_authorization_url, " and enter the PIN\n";
-my $pin = <STDIN>; chomp $pin;
-my($access_token, $access_token_secret, $user_id, $screen_name) = $nt->request_access_token(verifier => $pin);
-print "TOKEN = $access_token - SECRET = $access_token_secret \n";
+    print "Authorize this app at ", $nt->get_authorization_url, " and enter the PIN\n";
+    my $pin = <STDIN>; chomp $pin;
+    my($access_token, $access_token_secret, $user_id, $screen_name) = $nt->request_access_token(verifier => $pin);
+    print "TOKEN = $access_token - SECRET = $access_token_secret \n";
+    
+    if(open(TOKENFILE, ">$data_directory/oauth_token")){
+	print TOKENFILE "TOKEN=$access_token\n";
+	print TOKENFILE "SECRET=$access_token_secret\n";
+	print "written to $data_directory/oauth_token \n";
+    }    
 }
 
 # Read last id
 open(IDFILE, "+>>$data_directory/lastid") or die "Write error lastid! $!\n";
-chomp(my $high_water = <IDFILE>);
+my $high_water = <IDFILE>;
+if(not defined $high_water){
+    $high_water='0';
+}
+chomp($high_water);
 close(IDFILE);
 
 # Open output file
