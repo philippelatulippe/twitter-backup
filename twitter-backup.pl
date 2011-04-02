@@ -6,7 +6,7 @@ use diagnostics;
 
 use Net::Twitter;
 
-my $data_directory = "backup";
+my $data_directory = "twitter_backup";
 
 # Initialize Twitter connections
 my $nt = Net::Twitter->new(
