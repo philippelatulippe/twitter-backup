@@ -8,6 +8,8 @@ use Net::Twitter;
 
 my $data_directory = "twitter_backup";
 
+mkdir $data_directory;
+
 # Initialize Twitter connections
 my $nt = Net::Twitter->new(
     traits          => ['API::REST', 'OAuth'],
@@ -30,7 +32,7 @@ print "TOKEN = $access_token - SECRET = $access_token_secret \n";
 }
 
 # Read last id
-open(IDFILE, "$data_directory/lastid") or die "Write error lastid! $!\n";
+open(IDFILE, "+>>$data_directory/lastid") or die "Write error lastid! $!\n";
 chomp(my $high_water = <IDFILE>);
 close(IDFILE);
 
