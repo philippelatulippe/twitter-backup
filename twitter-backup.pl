@@ -68,7 +68,7 @@ my $countimported = 0;
 
 eval {
 
-	my $statuses = $nt->friends_timeline({ since_id => $high_water, count => $returns });
+	my $statuses = $nt->friends_timeline({ since_id => $high_water, count => $returns, include_rts => '1' });
 
         #for my $status ( @$statuses ) {
         for my $status ( sort { $a->{id} <=> $b->{id}; } @$statuses ) {
